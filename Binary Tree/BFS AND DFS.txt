@@ -1,0 +1,168 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+
+class node{
+    public:
+    int data;
+    node* left;
+    node* right;
+    
+    node(int d) {
+        this -> data = d;
+        this -> left = NULL;
+        this -> right = NULL;
+    }
+};
+
+
+node* buildtree(node* root) {
+    int data;
+    cin>>data;
+    
+    if(data == -1) {
+        return NULL;
+    }
+    node* tmp = new node(data);
+    cout<<"Enter the data At Left of "<<data<<endl;
+    tmp -> left = buildtree(tmp->left);
+    
+    cout<<"Enter the data At right of "<<data<<endl;
+    tmp -> right = buildtree(tmp->right);
+    
+    return tmp;
+    
+}
+
+void levelwiseTraversing(node* root) {
+    cout<<" \n **** USING BREADTH FIRST SEARCH ****"<<endl;
+    cout<<"\n\nLevel Wise Traversing in BFS"<<endl;
+    queue<node*> q;
+    q.push(root);
+    while(!q.empty()) {
+        node* tmp1 = q.front();
+        q.pop();
+        cout<<tmp1->data << "-";
+        
+        if(tmp1->left){
+            q.push(tmp1->left);
+        }
+        if(tmp1->right){
+            q.push(tmp1->right);
+        }
+
+    }
+}
+
+void inorderTraversal(node* root)
+{
+    if(root==NULL) {
+        return;
+    }
+    inorderTraversal(root -> left);
+    cout<<root ->data<<"-";
+    inorderTraversal(root -> right);
+}
+
+void preorder(node* root)
+{
+    if(root==NULL) {
+        return;
+    }
+    
+    cout<<root ->data<<"-";
+    inorderTraversal(root -> left);
+    inorderTraversal(root -> right);
+}
+
+void postorder(node* root)
+{
+    if(root==NULL) {
+        return;
+    }
+    inorderTraversal(root -> left);
+    inorderTraversal(root -> right);
+    cout<<root ->data<<"-";
+}
+
+bool levelwiseSearch(node* root, int key) {
+    queue<node*> q;
+    q.push(root);
+    
+    while(!q.empty()) {
+        node* tmp = q.front();
+        q.pop();
+        cout<<tmp->data<<" ";
+        if(tmp->left) {
+            q.push(tmp->left);
+        }
+        if(tmp->right) {
+            q.push(tmp->right);
+        }
+        if(tmp->data==key) {
+            return true;
+        }
+    }
+    cout<<endl;
+    return false;
+}
+
+void SearchPreorderTraversal(node* root, int key) {
+    if(root == NULL) {
+        return;
+    }
+    
+    if(root->data!=key)
+        cout<<root ->data<<"-";
+    else{
+        cout<<root->data;
+        exit(0);
+    }    
+    
+    
+    SearchPreorderTraversal(root -> left,key);
+    SearchPreorderTraversal(root -> right,key);
+    
+    
+}
+
+int main() {
+    node* root=NULL;
+    cout<<"Enter the Root Node"<<endl;
+    root = buildtree(root);
+    //BFS
+    levelwiseTraversing(root);
+    cout<<endl;
+    
+    cout<<"Enter the Element you want to search "<<endl;
+    int key;
+    cin>>key;
+    
+    cout<<"\nUSING BFS THE PATH FROM ROOT NODE : ";
+    if(levelwiseSearch(root, key)){
+        cout<<endl;
+        cout<<"STATUS : FOUND"<<endl;
+    }
+    else{
+        cout<<"NOT FOUND"<<endl;
+    }
+    
+    
+    cout<<" \n\n ***** Depth First Search *****"<<endl;
+    //DFS
+    cout<<"Three Type of Traversal : "<<endl;
+    cout<<"1> Inorder Traversal : ";
+    inorderTraversal(root);
+    cout<<endl;
+    cout<<"2> Preorder Traversal : ";
+    preorder(root);
+    cout<<endl;
+    cout<<"3> Postorder Traversal : ";
+    postorder(root);
+    cout<<endl;
+    
+    cout<<"Search Path in DFS using Inorder Traversal : "<<endl;
+    SearchPreorderTraversal(root, key);
+    
+    return 0;
+}
